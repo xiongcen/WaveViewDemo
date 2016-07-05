@@ -1,0 +1,20 @@
+#OSX Noise
+.DS_Store
+
+#Gradle Noise
+.gradle/
+
+#Build output
+bin/
+gen/
+out/
+build/
+
+#Project Files
+.idea/
+*.iml
+.classpath
+.project
+
+#Ant config files
+local.properties
