@@ -20,7 +20,7 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
-        <activity android:name=".PorterDuffXfermodeActivity">
+        <activity android:name=".porter.PorterDuffXfermodeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,7 +1,10 @@
-package com.example.xiongcen.myapplication;
+package com.example.xiongcen.myapplication.porter;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.example.xiongcen.myapplication.R;
+
 /**
  * @author tianjian 
  * @created 2015/2/2

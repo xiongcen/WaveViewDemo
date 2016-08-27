@@ -1,5 +1,5 @@
 
-package com.example.xiongcen.myapplication;
+package com.example.xiongcen.myapplication.porter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,6 +13,9 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.example.xiongcen.myapplication.R;
+import com.example.xiongcen.myapplication.UiUtils;
 
 public class PorterDuffXfermodeView extends View {
 

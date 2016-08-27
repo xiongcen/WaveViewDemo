@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.example.xiongcen.myapplication.WaveView
+    <com.example.xiongcen.myapplication.wave.WaveView
         android:id="@+id/wave"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

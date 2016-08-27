@@ -1,4 +1,4 @@
-package com.example.xiongcen.myapplication;
+package com.example.xiongcen.myapplication.wave;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.example.xiongcen.myapplication.UiUtils;
 
 /**
  * Created by xiongcen on 16-7-4.

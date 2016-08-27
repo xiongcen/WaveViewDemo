@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.example.xiongcen.myapplication.PorterDuffXfermodeView
+    <com.example.xiongcen.myapplication.porter.PorterDuffXfermodeView
         android:id="@+id/porter_duff_xfermode_view"
         android:layout_width="173dp"
         android:layout_height="173dp"
