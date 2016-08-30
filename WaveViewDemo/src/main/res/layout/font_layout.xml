@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.xiongcen.myapplication.font.ECGView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.xiongcen.myapplication.font.ShadowView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-</com.example.xiongcen.myapplication.font.ECGView>
+</com.example.xiongcen.myapplication.font.ShadowView>
