@@ -28,7 +28,15 @@
             </intent-filter>
         </activity>-->
 
-        <activity android:name=".font.FontActivity">
+        <!--<activity android:name=".font.FontActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <activity android:name=".propertyanim.PropertyAnimActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
