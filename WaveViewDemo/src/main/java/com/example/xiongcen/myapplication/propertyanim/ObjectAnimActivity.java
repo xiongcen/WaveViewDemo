@@ -41,6 +41,7 @@ public class ObjectAnimActivity extends Activity {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float cVal = (Float) animation.getAnimatedValue();
                 System.out.println("xc " + "PropertyAnimActivity.onAnimationUpdate cVal=" + cVal);
+                // 自己给view手动设置属性
                 view.setAlpha(cVal);
                 view.setScaleX(cVal);
                 view.setScaleY(cVal);

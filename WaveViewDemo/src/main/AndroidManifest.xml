@@ -36,7 +36,23 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
-        <activity android:name=".propertyanim.ObjectAnimActivity">
+        <!--<activity android:name=".propertyanim.ObjectAnimActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <!--<activity android:name=".propertyanim.ValueAnimatorActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <activity android:name=".propertyanim.AnimatorSetActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
