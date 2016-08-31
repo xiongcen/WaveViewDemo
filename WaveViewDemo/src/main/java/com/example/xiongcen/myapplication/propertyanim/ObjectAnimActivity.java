@@ -13,14 +13,14 @@ import com.example.xiongcen.myapplication.R;
 /**
  * Created by xiongcen on 16/8/30.
  */
-public class PropertyAnimActivity extends Activity {
+public class ObjectAnimActivity extends Activity {
 
     private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.property_anim_layout);
+        setContentView(R.layout.object_animator);
         imageView = (ImageView) findViewById(R.id.id_ball);
     }
 
@@ -31,6 +31,7 @@ public class PropertyAnimActivity extends Activity {
 //                .setDuration(500)//
 //                .start();
 
+        // 2.使用部分API实现多效果动画
         ObjectAnimator anim = ObjectAnimator//
                 .ofFloat(view, "zhy", 1.0F, 0.0F)//
                 .setDuration(500);//
@@ -47,6 +48,7 @@ public class PropertyAnimActivity extends Activity {
         });
     }
 
+    // 多效果实现
     public void propertyValuesHolder(View view) {
         PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat("alpha", 1f,
                 0f, 1f);
@@ -56,4 +58,6 @@ public class PropertyAnimActivity extends Activity {
                 0, 1f);
         ObjectAnimator.ofPropertyValuesHolder(view, pvhX, pvhY, pvhZ).setDuration(1000).start();
     }
+
 }
+

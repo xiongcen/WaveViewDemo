@@ -36,7 +36,7 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
-        <activity android:name=".propertyanim.PropertyAnimActivity">
+        <activity android:name=".propertyanim.ObjectAnimActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
