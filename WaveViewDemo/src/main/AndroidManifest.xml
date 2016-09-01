@@ -52,7 +52,15 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
-        <activity android:name=".propertyanim.AnimatorSetActivity">
+        <!--<activity android:name=".propertyanim.AnimatorSetActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <activity android:name=".propertyanim.Xml4AnimActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
