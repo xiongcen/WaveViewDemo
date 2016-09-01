@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
+ * 心电图
  * Created by xiongcen on 16/8/30.
  */
 public class ECGView extends View {
