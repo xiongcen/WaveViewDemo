@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--delay:表示子元素开始动画的时间延迟。比如子元素入场动画时间的时间周期为300ms,那么0.5表示每个子元素都需要延迟150ms才能播放入场动画。
+总体来说第一个子元素延迟150ms开始播放入场动画,第二个子元素延迟300ms开始播放入场动画。-->
 <layoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
     android:delay="0.5"
     android:animationOrder="normal"
