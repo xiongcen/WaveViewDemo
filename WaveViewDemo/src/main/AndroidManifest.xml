@@ -84,12 +84,34 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
-        <activity android:name=".propertyanim.LayoutAnimationActivity">
+        <!--<activity android:name=".propertyanim.LayoutAnimationActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <!--<activity android:name=".porter.PorterViewActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <activity android:name=".circleimg.CircleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".circleimg.Activity2">
+        </activity>
+
+        <activity android:name=".circleimg.Activity3">
         </activity>
     </application>
 

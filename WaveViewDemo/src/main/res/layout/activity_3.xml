@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.xiongcen.myapplication.porter.view.ClipRevealFrame xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/rectangle_shape_three"
+                    android:src="@drawable/bomberman" />
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/rectangle_shape"
+                    android:src="@drawable/mario" />
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/oval_shape"
+                    android:src="@drawable/sonic" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/rectangle_shape_two"
+                    android:src="@drawable/pacman" />
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/bg_a"
+                    android:src="@drawable/sonic" />
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/bg_b"
+                    android:src="@drawable/bomberman" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="visible"
+                android:orientation="horizontal">
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/bg_c"
+                    android:src="@drawable/a123" />
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/bg_d"
+                    android:src="@drawable/a123" />
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/bg_e"
+                    android:src="@drawable/a123" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/house"
+                    android:src="@drawable/a123" />
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/air_icon"
+                    android:src="@drawable/a123" />
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/user"
+                    android:src="@drawable/a123" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/gg"
+                    android:src="@drawable/a123" />
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/google"
+                    android:src="@drawable/a123" />
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/and"
+                    android:src="@drawable/a123" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <com.example.xiongcen.myapplication.porter.view.FreeShapeImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/bg_one"
+                    android:src="@drawable/one" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</com.example.xiongcen.myapplication.porter.view.ClipRevealFrame>
+
