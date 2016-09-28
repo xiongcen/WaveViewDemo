@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="8"
+        android:shadowDy="8"
+        android:shadowRadius="1.5"
+        android:text="ClipPath"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <com.example.xiongcen.myapplication.circleimg.CircleImageViewA
+        android:id="@+id/imgViewA"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="8"
+        android:shadowDy="8"
+        android:shadowRadius="1.5"
+        android:text="PorterDuffXfermode"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <com.example.xiongcen.myapplication.circleimg.CircleImageViewB
+        android:id="@+id/imgViewB"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>
+
+
+
