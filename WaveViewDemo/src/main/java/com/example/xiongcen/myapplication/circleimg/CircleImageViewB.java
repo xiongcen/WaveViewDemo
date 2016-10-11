@@ -88,6 +88,27 @@ public class CircleImageViewB extends ImageView {
         //drawNightColor(canvas, true);
 
         canvas.restore();
+
+        /** canvas的save和restore最好证明，去除两个方法会画出不一样的效果
+        int px = getMeasuredWidth();
+        int py = getMeasuredWidth();
+
+        // Draw background
+        canvas.drawRect(0, 0, px, py, mPaint);
+
+        canvas.save();
+        canvas.rotate(90, px/2, py/2);
+
+        // Draw up arrow
+        canvas.drawLine(px / 2, 0, 0, py / 2, mPaint);
+        canvas.drawLine(px / 2, 0, px, py / 2, mPaint);
+        canvas.drawLine(px / 2, 0, px / 2, py, mPaint);
+
+        canvas.restore();
+
+        // Draw circle
+        canvas.drawCircle(px - 10, py - 10, 10, mPaint);
+         */
     }
 
 
