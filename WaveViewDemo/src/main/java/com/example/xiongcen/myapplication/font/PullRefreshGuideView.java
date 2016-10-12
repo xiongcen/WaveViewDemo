@@ -31,8 +31,8 @@ public class PullRefreshGuideView extends View {
     private int mBitamp1Width;
     private int mBitamp1Height;
     // 第二张图触发开始点x的值，量PSD得出
-    private int mBitamp2StartX = 94 * 2;
-    private int mBitamp2StartY = 16 * 2;
+    private int mBitamp2StartX = 94;
+    private int mBitamp2StartY = 16;
     // 第二张图的宽高
     private int mBitamp2Width;
     private int mBitamp2Height;
