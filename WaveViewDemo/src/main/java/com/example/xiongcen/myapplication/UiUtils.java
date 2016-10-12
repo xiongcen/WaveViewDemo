@@ -1,7 +1,9 @@
 
 package com.example.xiongcen.myapplication;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -27,6 +29,12 @@ public class UiUtils {
         } catch (Exception e) {
             return DisplayMetrics.DENSITY_DEFAULT;
         }
+    }
+
+    public static int getStatusBarHeight(Activity activity) {
+        Rect rect = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+        return rect.top;
     }
 
 }
