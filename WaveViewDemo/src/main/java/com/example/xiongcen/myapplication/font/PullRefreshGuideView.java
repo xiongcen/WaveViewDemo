@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.xiongcen.myapplication.R;
+import com.example.xiongcen.myapplication.SystemUtils;
 import com.example.xiongcen.myapplication.UiUtils;
 
 /**
@@ -21,18 +22,19 @@ import com.example.xiongcen.myapplication.UiUtils;
  */
 public class PullRefreshGuideView extends View {
 
-    private static final int TOP = 200;
     private static final int LEFT = 0;
     private static final int DASH_LENGTH = 200;
-    private static final int RATE_1 = 5;
-    private static final int RATE_2 = 10;
+    private static final int RATE_1 = 8;
+    private static final int RATE_2 = 16;
 
+    // 画第一张图距上的高度
+    private int mTOP;
     // 第一张图的宽高
     private int mBitamp1Width;
     private int mBitamp1Height;
-    // 第二张图触发开始点x的值，量PSD得出
-    private int mBitamp2StartX = 94;
-    private int mBitamp2StartY = 16;
+    // 第二张图触发开始点x，y的值，量PSD得出
+    private int mBitamp2StartX = 135;
+    private int mBitamp2StartY = 23;
     // 第二张图的宽高
     private int mBitamp2Width;
     private int mBitamp2Height;
@@ -51,7 +53,7 @@ public class PullRefreshGuideView extends View {
 
     private boolean mInterruptInvalidate = false;
 
-    private Path mPath;
+    private Path mPath = new Path();
 
     private Paint mPaint = new Paint();
 
@@ -71,12 +73,19 @@ public class PullRefreshGuideView extends View {
         }
     };
 
+    private Runnable mInvalidateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            invalidate();
+        }
+    };
+
     public PullRefreshGuideView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mScreenWidth = UiUtils.getScreenWidthPixels(getContext());
+        mScreenWidth = SystemUtils.getScreenWidth(getContext());
 
-        mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.circle);
-        mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.hand);
+        mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.biz_pull_refresh_guide_circle);
+        mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.biz_pull_refresh_guide_hand);
 
         mBitamp1Width = mBitmap1.getWidth();
         mBitamp1Height = mBitmap1.getHeight();
@@ -84,20 +93,24 @@ public class PullRefreshGuideView extends View {
         mBitamp2Width = mBitmap2.getWidth();
         mBitamp2Height = mBitmap2.getHeight();
 
+        // Toolbar高度+二级导航高度-第一张图中心点高度
+//        mTOP = getResources().getDimensionPixelSize(R.dimen.tool_bar_height)
+//                + getResources().getDimensionPixelSize(R.dimen.biz_pager_indicator_height) - mBitamp1Height / 2;
+        mTOP = 0;
         mStartX = LEFT + mScreenWidth / 2;
-        mStartY = TOP + mBitamp1Height / 2;
+        mStartY = mTOP + mBitamp1Height / 2;
         mEndY = mStartY + DASH_LENGTH;
         mY = mStartY;
 
         int srcRectLeft1 = (mScreenWidth - mBitamp1Width) / 2 + LEFT;
-        int srcRectTop1 = TOP;
+        int srcRectTop1 = mTOP;
         int srcRectRight1 = srcRectLeft1 + mBitamp1Width;
         int srcRectBottom1 = srcRectTop1 + mBitamp1Height;
         mDestRect1 = new RectF(srcRectLeft1, srcRectTop1, srcRectRight1, srcRectBottom1);
 
 
         int srcRectLeft2 = mScreenWidth / 2 - mBitamp2StartX;
-        int srcRectTop2 = mBitamp1Height / 2 + TOP - mBitamp2StartY;
+        int srcRectTop2 = mBitamp1Height / 2 + mTOP - mBitamp2StartY;
         int srcRectRight2 = srcRectLeft2 + mBitamp2Width;
         int srcRectBottom2 = srcRectTop2 + mBitamp2Height;
         mDestRect2 = new RectF(srcRectLeft2, srcRectTop2, srcRectRight2, srcRectBottom2);
@@ -107,12 +120,12 @@ public class PullRefreshGuideView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setColor(Color.GREEN);
-        mPath = new Path();
+        mPaint.setColor(Color.WHITE);
         mPath.moveTo(mStartX, mStartY);
         mPath.lineTo(mStartX, mY);
         mPaint.setPathEffect(mEffects);
         canvas.drawPath(mPath, mPaint);
+        mPath.reset();
 
         canvas.drawBitmap(mBitmap1, null, mDestRect1, mPaint);
         canvas.drawBitmap(mBitmap2, null, mDestRect2, mPaint);
@@ -141,18 +154,17 @@ public class PullRefreshGuideView extends View {
 
         if (!mInterruptInvalidate) {
             if (mCount < 3) {
-                try {
-                    Thread.sleep(16);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                invalidate();
+                postDelayed(mInvalidateRunnable, 16);
             } else {
+                removeCallbacks(mInvalidateRunnable);
                 postDelayed(mGoneRunnable, 100);
             }
+        } else {
+            removeCallbacks(mGoneRunnable);
+            removeCallbacks(mInvalidateRunnable);
         }
 
-        if (mY <= mStartY) {
+        if (mReverseFlag && mY <= mStartY) {
             mCount++;
         }
     }
@@ -161,6 +173,7 @@ public class PullRefreshGuideView extends View {
     protected void onDetachedFromWindow() {
         mInterruptInvalidate = true;
         removeCallbacks(mGoneRunnable);
+        removeCallbacks(mInvalidateRunnable);
         super.onDetachedFromWindow();
     }
 }
