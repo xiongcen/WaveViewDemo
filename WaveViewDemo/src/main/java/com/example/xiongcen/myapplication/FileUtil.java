@@ -13,7 +13,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -323,5 +325,69 @@ public class FileUtil {
         }
 
         return true;
+    }
+
+    /**
+     * 实现将多个文件进行压缩
+     *
+     * @param list
+     * @param destZip
+     * @return
+     */
+    public static boolean createZip(List<File> list, File destZip) {
+        if (list == null || list.isEmpty() || destZip == null) {
+            return false;
+        }
+        InputStream input = null;
+        ZipOutputStream zipOut = null;
+        try {
+            if (destZip.exists()) {
+                destZip.delete();
+            }
+            try {
+                destZip.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                NeteaseLog.d("FileUtil", "create destZip fail");
+            }
+            if (!destZip.getParentFile().exists()) {
+                destZip.getParentFile().mkdir();
+            }
+
+            zipOut = new ZipOutputStream(new FileOutputStream(destZip));
+            int length = list.size();
+            File file = null;
+            byte[] buf = new byte[4096];
+            for (int i = 0; i < length; i++) {
+                file = list.get(i);
+                if (!file.isDirectory()) {
+                    input = new FileInputStream(file);
+                    zipOut.putNextEntry(new ZipEntry(file.getParentFile().getName() + File.separator + file.getName()));
+                    int readCount = 0;
+                    while ((readCount = input.read(buf)) > 0) {
+                        zipOut.write(buf, 0, readCount);
+                    }
+                    zipOut.closeEntry();
+                    input.close();
+                }
+            }
+            zipOut.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            NeteaseLog.d("FileUtil", "createZip fail");
+            return false;
+        } finally {
+            try {
+                if (input != null) {
+                    input.close();
+                }
+                if (zipOut != null) {
+                    zipOut.close();
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 }
