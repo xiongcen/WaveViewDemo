@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.xiongcen.myapplication">
-
+    <uses-permission android:name="android.permission.INTERNETE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <application android:allowBackup="true" android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name" android:supportsRtl="true" android:theme="@style/AppTheme">
@@ -115,7 +115,15 @@
         <!--<activity android:name=".circleimg.Activity3">-->
         <!--</activity>-->
 
-        <activity android:name=".mesh.MeshActivity">
+        <!--<activity android:name=".mesh.MeshActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <activity android:name=".imageloader.demo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
