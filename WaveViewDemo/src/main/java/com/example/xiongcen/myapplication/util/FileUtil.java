@@ -1,4 +1,4 @@
-package com.example.xiongcen.myapplication;
+package com.example.xiongcen.myapplication.util;
 
 import android.content.Context;
 import android.os.Build;

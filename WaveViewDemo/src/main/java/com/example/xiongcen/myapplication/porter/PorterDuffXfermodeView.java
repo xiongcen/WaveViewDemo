@@ -15,7 +15,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.xiongcen.myapplication.R;
-import com.example.xiongcen.myapplication.UiUtils;
+import com.example.xiongcen.myapplication.util.UiUtils;
 
 public class PorterDuffXfermodeView extends View {
 

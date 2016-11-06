@@ -14,8 +14,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.xiongcen.myapplication.R;
-import com.example.xiongcen.myapplication.SystemUtils;
-import com.example.xiongcen.myapplication.UiUtils;
+import com.example.xiongcen.myapplication.util.SystemUtils;
 
 /**
  * Created by xiongcen on 16/10/11.

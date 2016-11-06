@@ -1,8 +1,10 @@
-package com.example.xiongcen.myapplication;
+package com.example.xiongcen.myapplication.util;
 
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+
+import com.example.xiongcen.myapplication.BuildConfig;
 
 import java.io.BufferedReader;
 import java.io.File;

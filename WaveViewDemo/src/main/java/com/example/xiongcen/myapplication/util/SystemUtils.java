@@ -1,5 +1,5 @@
 
-package com.example.xiongcen.myapplication;
+package com.example.xiongcen.myapplication.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

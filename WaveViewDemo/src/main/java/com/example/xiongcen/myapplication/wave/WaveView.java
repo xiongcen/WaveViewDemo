@@ -8,7 +8,7 @@ import android.graphics.PaintFlagsDrawFilter;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.example.xiongcen.myapplication.UiUtils;
+import com.example.xiongcen.myapplication.util.UiUtils;
 
 /**
  * Created by xiongcen on 16-7-4.
