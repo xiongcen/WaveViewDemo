@@ -82,14 +82,25 @@ public class DiskCache implements BitmapCache {
      * @return
      */
     public File getDiskCacheDir(Context context, String uniqueName) {
-        String cachePath;
+        StringBuilder sb = new StringBuilder();
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            Log.d("", "### context : " + context + ", dir = " + context.getExternalCacheDir());
-            cachePath = context.getExternalCacheDir().getPath();
+            File file = context.getExternalCacheDir();
+
+            // In some case, even the sd card is mounted,
+            // getExternalCacheDir will return null
+            // may be it is nearly full.
+
+            if (file != null) {
+                sb.append(file.getAbsolutePath());
+            } else {
+                sb.append(Environment.getExternalStorageDirectory().getPath()).append("/Android/data/").append(context.getPackageName())
+                        .append("/cache/");
+            }
+            Log.d("", "### context : " + context + ", dir = " + sb.toString());
         } else {
-            cachePath = context.getCacheDir().getPath();
+            sb.append(context.getCacheDir().getPath());
         }
-        return new File(cachePath + File.separator + uniqueName);
+        return new File(sb.toString() + File.separator + uniqueName);
     }
 
     private int getAppVersion(Context context) {
@@ -113,7 +124,6 @@ public class DiskCache implements BitmapCache {
                 final InputStream inputStream = getInputStream(bean.getImageUriMd5());
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null,
                         options);
-                IOUtil.closeQuietly(inputStream);
                 return bitmap;
             }
         };

@@ -5,9 +5,9 @@ import android.graphics.BitmapFactory;
 
 import com.example.xiongcen.myapplication.imageloader.disklrucache.IOUtil;
 import com.example.xiongcen.myapplication.imageloader.request.BitmapRequest;
+import com.example.xiongcen.myapplication.imageloader.utils.BitmapDecoder;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -18,27 +18,46 @@ import java.net.URL;
 
 public class UrlLoader extends AbsLoader {
 
+    private InputStream is = null;
+
     @Override
     protected Bitmap onLoadImage(BitmapRequest request) {
         final String imageUrl = request.getImageUri();
-        FileOutputStream fos = null;
-        InputStream is = null;
         Bitmap bitmap = null;
-        HttpURLConnection conn = null;
-
+        HttpURLConnection connection = null;
         try {
             URL url = new URL(imageUrl);
-            conn = (HttpURLConnection) url.openConnection();
-            is = new BufferedInputStream(conn.getInputStream());
-            bitmap = BitmapFactory.decodeStream(is, null, null);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(15 * 1000);
+            connection.setReadTimeout(20 * 1000);
+            connection.setUseCaches(true);
+            int responseCode = connection.getResponseCode();
+            if (responseCode >= 300) {
+                connection.disconnect();
+                throw new IOException(responseCode + " " + connection.getResponseMessage() +
+                        " " + responseCode);
+            }
+            is = connection.getInputStream();
+
+            // 图片解析器
+            BitmapDecoder decoder = new BitmapDecoder() {
+
+                @Override
+                public Bitmap decodeBitmapWithOption(BitmapFactory.Options options) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(is, null,
+                            options);
+                    return bitmap;
+                }
+            };
+            bitmap = decoder.decodeBitmap(request.getImageViewWidth(),
+                    request.getImageViewHeight());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             IOUtil.closeQuietly(is);
-            IOUtil.closeQuietly(fos);
-            if (conn != null) {
+            if (connection != null) {
                 // 关闭流
-                conn.disconnect();
+                connection.disconnect();
             }
             return bitmap;
         }
