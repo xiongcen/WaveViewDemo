@@ -124,7 +124,15 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
-        <activity android:name=".imageloader.demo.MainActivity">
+        <!--<activity android:name=".imageloader.demo.MainActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <activity android:name=".network.demo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
