@@ -1,6 +1,11 @@
 package com.example.xiongcen.myapplication.network.core;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.example.xiongcen.myapplication.network.httpstacks.HttpStack;
+
+import java.io.File;
 
 /**
  * Created by xiongcen on 16/11/19.
@@ -13,8 +18,8 @@ public class SimpleNet {
      *
      * @return
      */
-    public static RequestQueue newRequestQueue() {
-        return newRequestQueue(RequestQueue.DEFAULT_CORE_NUMS);
+    public static RequestQueue newRequestQueue(Context context) {
+        return newRequestQueue(context, RequestQueue.DEFAULT_CORE_NUMS);
     }
 
     /**
@@ -23,8 +28,8 @@ public class SimpleNet {
      * @param coreNums
      * @return
      */
-    public static RequestQueue newRequestQueue(int coreNums) {
-        return newRequestQueue(coreNums, null);
+    public static RequestQueue newRequestQueue(Context context, int coreNums) {
+        return newRequestQueue(context, coreNums, null);
     }
 
     /**
@@ -34,9 +39,22 @@ public class SimpleNet {
      * @param httpStack 网络执行者
      * @return
      */
-    public static RequestQueue newRequestQueue(int coreNums, HttpStack httpStack) {
+    public static RequestQueue newRequestQueue(Context context, int coreNums, HttpStack httpStack) {
+        enableHttpResponseCache(context);
         RequestQueue queue = new RequestQueue(Math.max(0, coreNums), httpStack);
         queue.start();
         return queue;
+    }
+
+    private static void enableHttpResponseCache(Context context) {
+        try {
+            long httpCacheSize = 10 * 1024 * 1024; // 10 MiB
+            File httpCacheDir = new File(context.getCacheDir(), "http");
+            Class.forName("android.net.http.HttpResponseCache")
+                    .getMethod("install", File.class, long.class)
+                    .invoke(null, httpCacheDir, httpCacheSize);
+        } catch (Exception httpResponseCacheNotAvailable) {
+            Log.d("", "HTTP response cache is unavailable.");
+        }
     }
 }

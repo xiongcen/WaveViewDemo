@@ -63,7 +63,7 @@ public class HttpUrlConnStack implements HttpStack {
         urlConnection.setConnectTimeout(mConfig.connTimeOut);
         urlConnection.setReadTimeout(mConfig.soTimeOut);
         urlConnection.setDoInput(true);
-        urlConnection.setUseCaches(false);
+        urlConnection.setUseCaches(true);
         return (HttpURLConnection) urlConnection;
     }
 

@@ -2,6 +2,7 @@ package com.example.xiongcen.myapplication.network.demo;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.net.http.HttpResponseCache;
 import android.os.Bundle;
 import android.text.Html;
 import android.widget.TextView;
@@ -21,14 +22,14 @@ import java.io.ByteArrayOutputStream;
 public class MainActivity extends Activity {
 
     // 1、构建请求队列
-    RequestQueue mQueue = SimpleNet.newRequestQueue();
+    RequestQueue mQueue;
     TextView mResultTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_net);
-
+        mQueue = SimpleNet.newRequestQueue(getApplicationContext());
         mResultTv = (TextView) findViewById(R.id.result_tv);
         sendStringRequest();
     }
@@ -37,7 +38,7 @@ public class MainActivity extends Activity {
      * 发送GET请求,返回的是String类型的数据, 同理还有{@see JsonRequest}、{@see MultipartRequest}
      */
     private void sendStringRequest() {
-        StringRequest request = new StringRequest(Request.HttpMethod.GET, "http://www.baidu.com",
+        StringRequest request = new StringRequest(Request.HttpMethod.GET, "https://xiongcen.github.io/",
                 new Request.RequestListener<String>() {
 
                     @Override
@@ -81,7 +82,6 @@ public class MainActivity extends Activity {
 //        // 4、将请求添加到队列中
 //        mQueue.addRequest(multipartRequest);
 //    }
-
     private byte[] bitmapToBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -90,6 +90,10 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        HttpResponseCache cache = HttpResponseCache.getInstalled();
+        if (cache != null) {
+            cache.flush();
+        }
         mQueue.stop();
         super.onDestroy();
     }
