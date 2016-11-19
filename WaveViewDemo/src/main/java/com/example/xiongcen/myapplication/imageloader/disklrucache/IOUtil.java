@@ -69,7 +69,7 @@ public final class IOUtil {
             try {
                 closeable.close();
             } catch (RuntimeException rethrown) {
-                throw rethrown;
+                rethrown.printStackTrace();
             } catch (Exception ignored) {
             }
         }

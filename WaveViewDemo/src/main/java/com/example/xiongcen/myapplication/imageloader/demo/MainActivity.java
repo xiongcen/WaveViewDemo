@@ -65,11 +65,10 @@ public class MainActivity extends FragmentActivity {
             "http://img3.iqilu.com/data/attachment/forum/201308/21/192654ai88zf6zaa60zddo.jpg",
             "http://b.hiphotos.baidu.com/image/h%3D200/sign=9b711189efc4b7452b94b016fffd1e78/3c6d55fbb2fb4316fc06edda24a4462309f7d371.jpg",
             "http://h.hiphotos.baidu.com/image/h%3D200/sign=fc55a740f303918fc8d13aca613c264b/9213b07eca80653893a554b393dda144ac3482c7.jpg",
-            // 以下三张为本地图片,本地图片支持uri格式，形如file:// + 图片绝对路径
             "http://img2.pconline.com.cn/pconline/0706/19/1038447_34.jpg",
             "http://g.hiphotos.baidu.com/image/h%3D200/sign=dccb079f4ffbfbedc359317f48f1f78e/8b13632762d0f70317eb037c0cfa513d2697c531.jpg",
             "http://e.hiphotos.baidu.com/image/h%3D200/sign=5f5941a28344ebf87271633fe9f8d736/2e2eb9389b504fc2e15bc8a4e1dde71190ef6d0e.jpg",
-            "http://scimg.jb51.net/allimg/140708/11-140FQ53531Q9.jpg", // 不存在的图片
+            "http://scimg.jb51.net/allimg/140708/11-140FQ53531Q9.jpg",
             "http://pic10.nipic.com/20101103/5063545_000227976000_2.jpg",
             "http://pic24.nipic.com/20120928/6062547_081856296000_2.jpg",
             "http://pic.58pic.com/58pic/13/72/07/55Z58PICKka_1024.jpg",
