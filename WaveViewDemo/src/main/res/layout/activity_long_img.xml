@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0a0316">
+
+    <RelativeLayout
+        android:id="@+id/image_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.example.xiongcen.myapplication.longimg.TouchImageView
+            android:id="@+id/touch_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/scroll_tips"
+            android:layout_width="260dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="25dp"
+            android:layout_height="36dp" />
+
+        <LinearLayout
+            android:id="@+id/hot_area_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/webview_click"
+                android:layout_width="467px"
+                android:layout_height="132px" />
+
+            <View
+                android:id="@+id/finish_btn"
+                android:layout_width="467px"
+                android:layout_height="65px" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:clickable="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/long_img_loading" />
+
+</RelativeLayout>

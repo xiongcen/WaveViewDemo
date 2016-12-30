@@ -1,7 +1,7 @@
 package com.example.xiongcen.myapplication.util;
 
 
-import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.xiongcen.myapplication.BuildConfig;
@@ -16,6 +16,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,127 +30,81 @@ import java.util.concurrent.Executors;
  */
 public class NeteaseLog {
 
-    private final static boolean bUseTask = true;
     private static final String TAG = NeteaseLog.class.getName();
-
-    public static boolean DEBUG = true;
-
     private static final int TO_CONSOLE = 0x1;
-
     private static final int TO_SCREEN = 0x10;
-
     private static final int TO_FILE = 0x100;
-
-    private static final int FROM_LOGCAT = 0x1000;
-
-    private static final int DEBUG_ALL = TO_CONSOLE | TO_SCREEN | TO_FILE /*| FROM_LOGCAT*/;
-
     private static final String LOG_TEMP_FILE = "netease_log.temp";
     private static final String LOG_LAST_FILE = "netease_log_last.txt";
     private static final String LOG_NOW_FILE = "netease_log_now.txt";
-
-    private static final int LOG_LEVEL = BuildConfig.DEBUG ? Log.VERBOSE : Log.INFO;
-
-    private static final int LOG_MAXSIZE = 1024 * 1024 * 4; //double the size temporarily
-
-    private static final Object mLockObj = new Object();
-
-    private static String mPackagePath;
-
-    private static final Calendar mDate = Calendar.getInstance();
-    private static final StringBuffer mBuffer = new StringBuffer();
-    private static ExecutorService mExecutorService = Executors.newFixedThreadPool(1);
-
-
-    private static OutputStream mLogStream;
-    private static long mFileSize;
-
     /**
      * log文件路径
      */
     private static final String LOG_PATH = "/data/data/%packetname%/files/";
+    private final static boolean mUseTask = true;
+    private static final Object mLockObj = new Object();
+    private static final Calendar mDate = Calendar.getInstance();
+    private static final StringBuffer mBuffer = new StringBuffer();
+    public static boolean DEBUG = true;
+    private static int WRITE_TO = BuildConfig.DEBUG ? TO_CONSOLE | TO_FILE : TO_FILE;
+    private static int LOG_LEVEL = BuildConfig.DEBUG ? Log.VERBOSE : Log.INFO;
+    private static long LOG_MAXSIZE = 1024 * 1024 * 4; //double the size temporarily
+    private static boolean mOpenSystemLog = false;
+    private static ExecutorService mExecutorService = Executors.newFixedThreadPool(1);
 
+    private static OutputStream mLogStream;
+
+    private static long mFileSize;
+
+    private static String mPackagePath;
 
     private static PaintLogThread mPaintLogThread = null;
 
-    public static String getAppPath() {
-        if (mPackagePath != null) {
-            NeteaseLog.d("mAppPath lockObj:", "" + mLockObj.hashCode());
-            NeteaseLog.d("mAppPath hashCode:", "" + mPackagePath.hashCode());
-        }
-        return mPackagePath;
-    }
+    private static Process mProcess = null;
 
     public static void initAppPath(String packetName) {
         mPackagePath = LOG_PATH.replaceFirst("%packetname%", packetName);
     }
 
-
-
-
-    public static void log(String msg) {
-        d(TAG, msg);
-    }
-
-    public static void log(Throwable throwable) {
-        StringWriter sw = new StringWriter();
-        throwable.printStackTrace(new PrintWriter(sw));
-        NeteaseLog.w("Exception", sw.toString());
+    public static void v(String tag, String msg) {
+        log(tag, msg, WRITE_TO, Log.VERBOSE);
     }
 
     public static void d(String tag, String msg) {
-        log(tag, msg, DEBUG_ALL, Log.DEBUG);
-    }
-
-    public static void v(String tag, String msg) {
-        log(tag, msg, DEBUG_ALL, Log.VERBOSE);
-    }
-
-    public static void e(String tag, String msg) {
-        log(tag, msg, DEBUG_ALL, Log.ERROR);
+        log(tag, msg, WRITE_TO, Log.DEBUG);
     }
 
     public static void i(String tag, String msg) {
-        log(tag, msg, DEBUG_ALL, Log.INFO);
+        log(tag, msg, WRITE_TO, Log.INFO);
     }
 
     public static void w(String tag, String msg) {
-        log(tag, msg, DEBUG_ALL, Log.WARN);
+        log(tag, msg, WRITE_TO, Log.WARN);
     }
 
-
-    public static void d( String msg) {
-        log(TAG, msg, DEBUG_ALL, Log.DEBUG);
+    public static void e(String tag, String msg) {
+        log(tag, msg, WRITE_TO, Log.ERROR);
     }
 
-    public static void v( String msg) {
-        log(TAG, msg, DEBUG_ALL, Log.VERBOSE);
+    public static void e(String tag, Throwable throwable) {
+        StringWriter sw = new StringWriter();
+        throwable.printStackTrace(new PrintWriter(sw));
+        e(tag, sw.toString());
     }
-
-    public static void e(String msg) {
-        log(TAG, msg, DEBUG_ALL, Log.ERROR);
-    }
-
-    public static void i(String msg) {
-        log(TAG, msg, DEBUG_ALL, Log.INFO);
-    }
-
-    public static void w( String msg) {
-        log(TAG, msg, DEBUG_ALL, Log.WARN);
-    }
-
-
 
     private static void log(String tag, String msg, int outdest, int level) {
-        if (mPackagePath == null) {//未初始化
+        if (TextUtils.isEmpty(mPackagePath)) {
+            //未初始化
             return;
         }
 
-        if (tag == null)
+        if (TextUtils.isEmpty(tag))
             tag = "TAG_NULL";
-        if (msg == null)
+        if (TextUtils.isEmpty(msg))
             msg = "MSG_NULL";
+
         if (level >= LOG_LEVEL) {
+
             if ((outdest & TO_CONSOLE) != 0) {
                 logToConsole(tag, msg, level);
             }
@@ -157,18 +113,8 @@ public class NeteaseLog {
                 logToScreen(tag, msg, level);
             }
 
-            if ((outdest & FROM_LOGCAT) != 0) {
-//                if (mPaintLogThread == null) {
-//                    NeteaseLog log = new NeteaseLog();
-//                    mPaintLogThread = log.new PaintLogThread();
-//                    mPaintLogThread.start();
-//                }
-                start();
-
-            }
-
             if ((outdest & TO_FILE) != 0) {
-                if (bUseTask) {
+                if (mUseTask) {
                     final String Tag = tag;
                     final String Msg = msg;
                     final int Level = level;
@@ -182,16 +128,17 @@ public class NeteaseLog {
                             });
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
-                    } catch (Error e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "log -> " + e.toString());
                     }
                 } else {
                     logToFile(tag, msg, level);
                 }
             }
-        }
 
+            if (mOpenSystemLog) {
+                startSystemLog();
+            }
+        }
     }
 
     /**
@@ -235,24 +182,28 @@ public class NeteaseLog {
      */
     private static void logToConsole(String tag, String msg, int level) {
         switch (level) {
-            case Log.DEBUG:
-                Log.d(tag, msg);
+            case Log.VERBOSE:
+                Log.v(tag, getFormatLog(tag, msg));
                 break;
-            case Log.ERROR:
-                Log.e(tag, msg);
+            case Log.DEBUG:
+                Log.d(tag, getFormatLog(tag, msg));
                 break;
             case Log.INFO:
-                Log.i(tag, msg);
-                break;
-            case Log.VERBOSE:
-                Log.v(tag, msg);
+                Log.i(tag, getFormatLog(tag, msg));
                 break;
             case Log.WARN:
-                Log.w(tag, msg);
+                Log.w(tag, getFormatLog(tag, msg));
+                break;
+            case Log.ERROR:
+                Log.e(tag, getFormatLog(tag, msg));
                 break;
             default:
                 break;
         }
+    }
+
+    private static void logToScreen(String tag, String msg, int level) {
+
     }
 
     /**
@@ -268,9 +219,8 @@ public class NeteaseLog {
 
             if (outStream != null) {
                 try {
-                    byte[] d = getFormatLog(tag, msg).getBytes("utf-8");
-
                     if (mFileSize < LOG_MAXSIZE) {
+                        byte[] d = getFormatLog(tag, msg).getBytes("utf-8");
                         outStream.write(d);
                         outStream.write("\r\n".getBytes());
                         outStream.flush();
@@ -281,19 +231,13 @@ public class NeteaseLog {
                         renameLogFile();
                         logToFile(tag, msg, level);
                     }
-
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "logToFile -> " + e.toString());
                 }
-
             } else {
                 Log.w(TAG, "Log File open fail: [AppPath]=" + mPackagePath + ",[LogName]:");
             }
         }
-    }
-
-    private static void logToScreen(String tag, String msg, int level) {
-
     }
 
     /**
@@ -301,11 +245,10 @@ public class NeteaseLog {
      *
      * @return
      */
-    @SuppressWarnings("hiding")
     private static OutputStream openLogFileOutStream() {
         if (mLogStream == null) {
             try {
-                if (mPackagePath == null || mPackagePath.length() == 0) {
+                if (TextUtils.isEmpty(mPackagePath)) {
                     return null;
                 }
                 File file = openAbsoluteFile(LOG_TEMP_FILE);
@@ -328,7 +271,7 @@ public class NeteaseLog {
                     mFileSize = 0;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "openLogFileOutStream -> " + e.toString());
             }
         }
         return mLogStream;
@@ -336,7 +279,7 @@ public class NeteaseLog {
 
 
     private static File openAbsoluteFile(String name) {
-        if (mPackagePath == null || mPackagePath.length() == 0) {
+        if (TextUtils.isEmpty(mPackagePath)) {
             return null;
         } else {
             File file = new File(mPackagePath + name);
@@ -355,7 +298,7 @@ public class NeteaseLog {
                 mFileSize = 0;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "closeLogFileOutStream -> " + e.toString());
         }
     }
 
@@ -364,21 +307,22 @@ public class NeteaseLog {
      * rename log file
      */
     private static void renameLogFile() {
-
         synchronized (mLockObj) {
-
             File file = openAbsoluteFile(LOG_TEMP_FILE);
             File destFile = openAbsoluteFile(LOG_LAST_FILE);
 
-            if (destFile.exists()) {
+            if (destFile != null && destFile.exists()) {
                 destFile.delete();
             }
-            file.renameTo(destFile);
+            if (file != null) {
+                file.renameTo(destFile);
+            }
         }
     }
 
-    public static void start() {
+    public static void startSystemLog() {
         synchronized (mLockObj) {
+            initProcess();
             if (mPaintLogThread == null) {
                 NeteaseLog log = new NeteaseLog();
                 mPaintLogThread = log.new PaintLogThread();
@@ -387,74 +331,71 @@ public class NeteaseLog {
         }
     }
 
-    public static void close() {
-
-        if (mPaintLogThread != null) {
-            mPaintLogThread.shutdown();
-            mPaintLogThread = null;
+    public static void closeSystemLog() {
+        synchronized (mLockObj) {
+            destroyProcess();
+            if (null != mPaintLogThread) {
+                mPaintLogThread = null;
+            }
         }
+    }
 
+    private static void initProcess() {
+        synchronized (mLockObj) {
+            mOpenSystemLog = true;
+            try {
+                if (mProcess == null) {
+                    ArrayList<String> cmdLine = new ArrayList<String>();   //设置命令   logcat -d 读取日志
+                    cmdLine.add("logcat");
+                    cmdLine.add("-d");
+
+                    mProcess = Runtime.getRuntime().exec(cmdLine.toArray(new String[cmdLine.size()]));   //捕获日志
+
+//                        ArrayList<String> clearLog = new ArrayList<String>();  //设置命令  logcat -c 清除日志
+//                        clearLog.add("logcat");
+//                        clearLog.add("-c");
+//                        Runtime.getRuntime().exec(clearLog.toArray(new String[clearLog.size()]));
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "initProcess -> " + e.toString());
+            }
+        }
+    }
+
+    private static void destroyProcess() {
+        synchronized (mLockObj) {
+            mOpenSystemLog = false;
+            if (mProcess != null) {
+                mProcess.destroy();
+                mProcess = null;
+            }
+        }
+    }
+
+    public static void close() {
         if (null != mExecutorService) {
             mExecutorService.shutdown();
             mExecutorService = null;
         }
     }
 
+    private static void printSystemLogToFile() {
+        try {
+            initProcess();
 
-    class PaintLogThread extends Thread {
-
-        Process mProcess;
-        boolean mStop = false;
-
-        public void shutdown() {
-            NeteaseLog.i("PaintLogThread:", "shutdown");
-            mStop = true;
-            if (mProcess != null) {
-                mProcess.destroy();
-                mProcess = null;
+            if (mProcess == null || TextUtils.isEmpty(mPackagePath)) {
+                return;
             }
-        }
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(mProcess.getInputStream()));    //将捕获内容转换为BufferedReader
 
-        public void run() {
-            try {
-
-                    ArrayList<String> cmdLine=new ArrayList<String>();   //设置命令   logcat -d 读取日志
-                    cmdLine.add("logcat");
-                    cmdLine.add("-d");
-
-                    ArrayList<String> clearLog=new ArrayList<String>();  //设置命令  logcat -c 清除日志
-                    clearLog.add("logcat");
-                    clearLog.add("-c");
-
-                     mProcess= Runtime.getRuntime().exec(cmdLine.toArray(new String[cmdLine.size()]));   //捕获日志
-                    BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(mProcess.getInputStream()));    //将捕获内容转换为BufferedReader
-
-
-                        String line = null;
-                        while (!mStop) {
-                            line = bufferedReader.readLine();
-                            if (line != null && mPackagePath != null) {
-                                logToFile("SysLog", line, Log.VERBOSE);
-//                                Runtime.getRuntime().exec(clearLog.toArray(new String[clearLog.size()]));
-                            } else {
-                                if (line == null) {
-                                    Log.i("PaintLogThread:", "readLine==null");
-                                    break;
-                                }
-
-
-                            }
-                        }
-
-
-            } catch (Exception e) {
-
-                e.printStackTrace();
-                Log.d(TAG, "logcatToFile Exception:" + e.toString());
+            String line = null;
+            while (mOpenSystemLog && (line = bufferedReader.readLine()) != null) {
+                logToFile("SysLog", line, Log.VERBOSE);
             }
+        } catch (Exception e) {
+            Log.e(TAG, "printSystemLogToFile -> " + e.toString());
         }
     }
-
 
     /**
      * back now log file
@@ -466,7 +407,7 @@ public class NeteaseLog {
 
                 File destFile = openAbsoluteFile(LOG_NOW_FILE);
 
-                if (destFile.exists()) {
+                if (destFile != null && destFile.exists()) {
                     destFile.delete();
                 }
 
@@ -485,49 +426,114 @@ public class NeteaseLog {
                 openLogFileOutStream();
 
             } catch (IOException e) {
-                e.printStackTrace();
-                Log.w("RpmmsLog", "backLogFile fail:" + e.toString());
+                Log.e(TAG, "backLogFile -> " + e.toString());
             }
         }
     }
 
     /**
      * 导出log文件
-     * 耗时操作
-     * @param zipFileName
+     *
      * @return
      */
-    public static boolean zipLogFile(String zipFileName) {
+    public static File exportLogFile() {
+        initProcess();
+
+        printSystemLogToFile();
+
         //backup ui log file
         backLogFile();
 
-        File destFile = new File(zipFileName);
-        if (destFile.exists()) {
-            destFile.delete();
-        }
+        destroyProcess();
 
-        try {
-            destFile.createNewFile();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-            return false;
-        }
-
-        File srcFile = openAbsoluteFile(LOG_NOW_FILE);
-        boolean ret = FileUtil.zip(srcFile, destFile);
-
-
-        destFile = null;
-        srcFile = null;
-        return ret;
+        return openAbsoluteFile(LOG_NOW_FILE);
     }
 
-    public static void logStackTrace(@NonNull String tag, int maxLine) {
+    public static <K, V> void printMap(String tag, Map<K, V> map, String msgPrefix, boolean isDebug) {
+        if (map == null || map.isEmpty()) {
+            if (isDebug) {
+                d(tag, "Map is null or empty!!");
+            } else {
+                i(tag, "Map is null or empty!!");
+            }
+        } else {
+            if (msgPrefix == null) {
+                msgPrefix = "";
+            }
+            Iterator<Map.Entry<K, V>> iterator = map.entrySet().iterator();
+            while (iterator != null && iterator.hasNext()) {
+                Map.Entry<K, V> entry = iterator.next();
+                if (entry != null) {
+                    if (isDebug) {
+                        d(tag, msgPrefix + "(" + entry.getKey() + " : " + entry.getValue() + ")");
+                    } else {
+                        i(tag, msgPrefix + "(" + entry.getKey() + " : " + entry.getValue() + ")");
+                    }
+                }
+            }
+        }
+    }
+
+    public static void logStackTrace(String tag, int maxLine, boolean isDebug) {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         for (int i = 2, size = Math.min(stackTraceElements.length, maxLine); i < size; i++) {
             if (stackTraceElements[i] != null) {
-                i(tag, stackTraceElements[i].toString());
+                if (isDebug) {
+                    d(tag, stackTraceElements[i].toString());
+                } else {
+                    i(tag, stackTraceElements[i].toString());
+                }
             }
+        }
+    }
+
+    /**
+     * 打开或关闭系统日志打印到文件
+     *
+     * @param openSystemLog
+     */
+    public static void systemLogOpenOrNot(boolean openSystemLog) {
+        NeteaseLog.i(TAG, "systemLogOpenOrNot:" + openSystemLog);
+        mOpenSystemLog = openSystemLog;
+        if (openSystemLog) {
+            startSystemLog();
+        } else {
+            closeSystemLog();
+        }
+    }
+
+    /**
+     * 修改日志打印等级
+     *
+     * @param level
+     */
+    public static void modifyLogLevel(int level) {
+        if (level < LOG_LEVEL) {
+            LOG_LEVEL = level;
+        }
+    }
+
+    /**
+     * 修改日志打印文件大小
+     *
+     * @param size
+     */
+    public static void modifyLogSize(long size) {
+        synchronized (mLockObj) {
+            if (size > LOG_MAXSIZE) {
+                NeteaseLog.i(TAG, "modifyLogSize:" + size);
+                LOG_MAXSIZE = size;
+            }
+        }
+    }
+
+    /**
+     * 将系统日志打印到文件
+     */
+    class PaintLogThread extends Thread {
+
+        public void run() {
+            printSystemLogToFile();
         }
     }
 }
