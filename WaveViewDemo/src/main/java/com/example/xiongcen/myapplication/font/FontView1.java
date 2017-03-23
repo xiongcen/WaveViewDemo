@@ -16,6 +16,8 @@ public class FontView1 extends View {
 
     private int baseX, baseY;// Baseline绘制的XY坐标
 
+    private Paint.FontMetrics mFontMetrics;// 文本测量对象
+
     public FontView1(Context context) {
         this(context, null);
     }
@@ -36,6 +38,8 @@ public class FontView1 extends View {
         textPaint.setTextSize(70);
         textPaint.setColor(Color.BLACK);
 
+        mFontMetrics = textPaint.getFontMetrics();
+
         linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeWidth(1);
@@ -51,7 +55,10 @@ public class FontView1 extends View {
 
         // 计算Baseline绘制的Y坐标
         /****** 大多数情况下我们没有考虑top和bottom ******/
+        // 文字以baseline开始绘制，所以要将内容移至中线，需要让文字下移。错误认知是下移ascent/2，但不要忽略了descent
         baseY = (int) ((canvas.getHeight() / 2) - ((textPaint.descent() + textPaint.ascent()) / 2));
+        // baseline和中线在一条线上，错误的实现
+//        baseY = canvas.getHeight() / 2;
         // 1.第一种实现方法
 //        canvas.drawText(TEXT, baseX, baseY, textPaint);
         // 2.第二种实现方法
