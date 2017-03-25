@@ -14,6 +14,8 @@ import android.view.View;
 import com.example.xiongcen.myapplication.R;
 
 /**
+ * 通过Bitmap的extractAlpha()方法从原图中分离出一个Alpha通道位图，
+ * 并在计算模糊滤镜的时候使用该位图生成模糊效果
  * Created by xiongcen on 16/8/29.
  */
 public class BlurMaskFilterView extends View {
