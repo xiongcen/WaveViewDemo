@@ -27,6 +27,9 @@ public class ECGView extends View {
     public ECGView(Context context, AttributeSet set) {
         super(context, set);
 
+        // 禁用硬件加速
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
+
         /*
          * 实例化画笔并设置属性
          */
@@ -38,7 +41,14 @@ public class ECGView extends View {
         // 设置结合处的形态为圆形
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setShadowLayer(7, 0, 0, Color.GREEN);
+        // 为绘制的图形添加一个阴影层效果
+        /**
+         * radius:模糊半径，radius越大越模糊，越小越清晰，但是如果radius设置为0，则阴影消失不见
+         * dx:阴影的横向偏移距离，正值向右偏移，负值向左偏移
+         * dy:阴影的纵向偏移距离，正值向下偏移，负值向上偏移
+         * color: 绘制阴影的画笔颜色，即阴影的颜色（对图片阴影无效）
+         */
+        mPaint.setShadowLayer(7, 0, 0, Color.RED);
 
         mPath = new Path();
         transX = 0;
