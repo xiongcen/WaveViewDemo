@@ -47,6 +47,8 @@ public class MaskFilterView extends View {
         mPaint.setColor(0xFF603811);
 
         // 设置画笔遮罩滤镜
+        // radius值越大阴影越扩散
+        // SOLID的效果就是在图像的Alpha边界外产生一层与Paint颜色一致的阴影效果而不影响图像本身
         mPaint.setMaskFilter(new BlurMaskFilter(20, BlurMaskFilter.Blur.SOLID));
     }
 
