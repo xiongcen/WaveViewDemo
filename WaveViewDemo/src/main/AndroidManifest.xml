@@ -149,13 +149,26 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
-        <activity android:name=".test.TestActivity">
+        <!--<activity android:name=".test.TestActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <activity android:name=".scroll.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".scroll.AbsActivity"/>
+        <activity android:name=".scroll.NormalActivity"/>
+        <activity android:name=".scroll.ScrollActivity"/>
+        <activity android:name=".scroll.ViewPagerActivity"/>
     </application>
 
 </manifest>
