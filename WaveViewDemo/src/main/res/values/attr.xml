@@ -3,4 +3,19 @@
     <declare-styleable name="pathType">
         <attr name="path_type" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="FlowHorizontalLayout">
+        <attr name="landscapeSpacing" format="dimension" />
+        <attr name="portraitSpacing" format="dimension" />
+        <attr name="landscapeGravity">
+            <flag name="start" value="0" />
+            <flag name="center" value="1" />
+            <flag name="end" value="2" />
+        </attr>
+        <attr name="portraitGravity">
+            <flag name="start" value="0" />
+            <flag name="center" value="1" />
+            <flag name="end" value="2" />
+        </attr>
+    </declare-styleable>
 </resources>
