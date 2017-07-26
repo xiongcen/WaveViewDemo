@@ -97,10 +97,6 @@ public class FlowHorizontalLayout extends ViewGroup {
 
                 View child = getChildAt(i);
 
-                if (child.getVisibility() == View.GONE) {
-                    continue;
-                }
-
                 // 测量子元素并考量其外边距
                 measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
 
@@ -111,34 +107,38 @@ public class FlowHorizontalLayout extends ViewGroup {
                 int childActualWidth = child.getMeasuredWidth() + mlp.leftMargin + mlp.rightMargin;
                 int childActualHeight = child.getMeasuredHeight() + mlp.topMargin + mlp.bottomMargin;
 
+                Log.i(TAG, "onMeasure ->第" + i + "个 childActualWidth:" + childActualWidth + ";childActualHeight:" + childActualHeight);
+
                 // 第一个元素的宽度就超过一行宽那么整个View都不显示
                 if (i == 0 && childActualWidth > widthActualSize) {
                     this.setVisibility(View.GONE);
                     break;
                 }
 
-                // 换行的条件应该加上mLandscapeSpacing，如果加上mLandscapeSpacing后发现需要换行，
-                // 则rowWidth不应该包含即将要换行的View的mLandscapeSpacing，
-                // 所以每次换行或者第一个View的rowWidth应该都只是View实际的宽度，
-                // 确保横向有下一个元素才加上mLandscapeSpacing。
-                int totalWidth = 0;
-                if (i == 0) {
-                    totalWidth = lineWidth + childActualWidth;
-                } else {
-                    totalWidth = lineWidth + childActualWidth + mLandscapeSpacing;
-                }
+                if (child.getVisibility() != View.GONE) {
+                    // 换行的条件应该加上mLandscapeSpacing，如果加上mLandscapeSpacing后发现需要换行，
+                    // 则rowWidth不应该包含即将要换行的View的mLandscapeSpacing，
+                    // 所以每次换行或者第一个View的rowWidth应该都只是View实际的宽度，
+                    // 确保横向有下一个元素才加上mLandscapeSpacing。
+                    int totalWidth = 0;
+                    if (i == 0) {
+                        totalWidth = lineWidth + childActualWidth;
+                    } else {
+                        totalWidth = lineWidth + childActualWidth + mLandscapeSpacing;
+                    }
 
-                if (totalWidth > widthActualSize) {
-                    // 换行
-                    parentWidth = Math.max(parentWidth, lineWidth);
-                    parentHeight += lineHeight + mPortraitSpacing;
+                    if (totalWidth > widthActualSize) {
+                        // 换行
+                        parentWidth = Math.max(parentWidth, lineWidth);
+                        parentHeight += lineHeight + mPortraitSpacing;
 
-                    lineWidth = childActualWidth;
-                    lineHeight = childActualHeight;
-                } else {
-                    // 不换行
-                    lineWidth = totalWidth;
-                    lineHeight = Math.max(lineHeight, childActualHeight);
+                        lineWidth = childActualWidth;
+                        lineHeight = childActualHeight;
+                    } else {
+                        // 不换行
+                        lineWidth = totalWidth;
+                        lineHeight = Math.max(lineHeight, childActualHeight);
+                    }
                 }
 
                 // 最后一行是不会超出width范围的，所以要单独处理
@@ -146,6 +146,9 @@ public class FlowHorizontalLayout extends ViewGroup {
                     parentWidth = Math.max(parentWidth, lineWidth);
                     parentHeight += lineHeight;
                 }
+
+                Log.i(TAG, "onMeasure ->第" + i + "行 lineWidth:" + lineWidth + ";lineHeight:" + lineHeight);
+
             }
 
             // 父容器内边距将其累加到期望值
@@ -165,7 +168,7 @@ public class FlowHorizontalLayout extends ViewGroup {
     private void calculatePosition(int start, int end, int widthActualSize, int lineWidth, int lineHeight) {
         for (int j = start; j < end; j++) {
             List<Integer> integers = position.get(j);
-            if (integers.size() < 4) {
+            if (integers == null || integers.size() < 4) {
                 continue;
             }
             int oldLeft = integers.get(0);
@@ -253,7 +256,8 @@ public class FlowHorizontalLayout extends ViewGroup {
         position.clear();
 
         int widthActualSize = r - l - this.getPaddingRight() - this.getPaddingLeft();
-        Log.i(TAG, "onLayout -> widthActualSize:" + widthActualSize);
+        int heightActualSize = b - t - this.getPaddingTop() - this.getPaddingBottom();
+        Log.i(TAG, "onLayout -> widthActualSize:" + widthActualSize + ";heightActualSize:" + heightActualSize);
 
         // 累加当前行的行宽
         int lineWidth = 0;
@@ -269,10 +273,6 @@ public class FlowHorizontalLayout extends ViewGroup {
 
                 View child = getChildAt(i);
 
-                if (child.getVisibility() == View.GONE) {
-                    continue;
-                }
-
                 // 获取子元素布局参数
                 MarginLayoutParams mlp = (MarginLayoutParams) child.getLayoutParams();
 
@@ -286,57 +286,60 @@ public class FlowHorizontalLayout extends ViewGroup {
                     break;
                 }
 
-                // 换行的条件应该加上mLandscapeSpacing，如果加上mLandscapeSpacing后发现需要换行，
-                // 则rowWidth不应该包含即将要换行的View的mLandscapeSpacing，
-                // 所以每次换行或者第一个View的rowWidth应该都只是View实际的宽度，
-                // 确保横向有下一个元素才加上mLandscapeSpacing。
-                int totalWidth = 0;
-                if (i == 0) {
-                    totalWidth = lineWidth + childActualWidth;
-                } else {
-                    totalWidth = lineWidth + childActualWidth + mLandscapeSpacing;
-                }
+                if (child.getVisibility() != View.GONE) {
 
-                if (totalWidth > widthActualSize) {
-                    // 换行
+                    // 换行的条件应该加上mLandscapeSpacing，如果加上mLandscapeSpacing后发现需要换行，
+                    // 则rowWidth不应该包含即将要换行的View的mLandscapeSpacing，
+                    // 所以每次换行或者第一个View的rowWidth应该都只是View实际的宽度，
+                    // 确保横向有下一个元素才加上mLandscapeSpacing。
+                    int totalWidth = 0;
+                    if (i == 0) {
+                        totalWidth = lineWidth + childActualWidth;
+                    } else {
+                        totalWidth = lineWidth + childActualWidth + mLandscapeSpacing;
+                    }
 
-                    // 先计算上一行的所有View应该摆放的位置
-                    calculatePosition(lastChangeLineIndex, i, widthActualSize, lineWidth, lineHeight);
-                    lastChangeLineIndex = i;
+                    if (totalWidth > widthActualSize) {
+                        // 换行
 
-                    // 当前控件将跑到下一行，从最左边开始，所以left就是0，
-                    // 而top则需要加上上一行的行高+mPortraitSpacing，才是这个控件的top点。
-                    top += lineHeight + mPortraitSpacing;
-                    left = getPaddingLeft();
+                        // 先计算上一行的所有View应该摆放的位置
+                        calculatePosition(lastChangeLineIndex, i, widthActualSize, lineWidth, lineHeight);
+                        lastChangeLineIndex = i;
 
-                    // 重新初始化lineHeight和lineWidth
-                    lineHeight = childActualHeight;
-                    lineWidth = childActualWidth;
-                } else {
-                    // 不换行
-                    lineWidth = totalWidth;
-                    lineHeight = Math.max(lineHeight, childActualHeight);
-                }
+                        // 当前控件将跑到下一行，从最左边开始，所以left就是0，
+                        // 而top则需要加上上一行的行高+mPortraitSpacing，才是这个控件的top点。
+                        top += lineHeight + mPortraitSpacing;
+                        left = getPaddingLeft();
 
-                // 计算childView的left,top,right,bottom
-                int lc = left + mlp.leftMargin;
-                int tc = top + mlp.topMargin;
-                int rc = lc + child.getMeasuredWidth();
-                int bc = tc + child.getMeasuredHeight();
+                        // 重新初始化lineHeight和lineWidth
+                        lineHeight = childActualHeight;
+                        lineWidth = childActualWidth;
+                    } else {
+                        // 不换行
+                        lineWidth = totalWidth;
+                        lineHeight = Math.max(lineHeight, childActualHeight);
+                    }
 
-                List<Integer> list = new ArrayList<>();
-                list.add(lc);
-                list.add(tc);
-                list.add(rc);
-                list.add(bc);
-                position.put(i, list);
+                    // 计算childView的left,top,right,bottom
+                    int lc = left + mlp.leftMargin;
+                    int tc = top + mlp.topMargin;
+                    int rc = lc + child.getMeasuredWidth();
+                    int bc = tc + child.getMeasuredHeight();
 
-                // 将left置为下一子控件的起始点
-                left += childActualWidth + mLandscapeSpacing;
+                    List<Integer> list = new ArrayList<>();
+                    list.add(lc);
+                    list.add(tc);
+                    list.add(rc);
+                    list.add(bc);
+                    position.put(i, list);
 
-                // 最后一行默认不换行，所以要单独处理
-                if (i == childCount - 1) {
-                    calculatePosition(lastChangeLineIndex, childCount, widthActualSize, lineWidth, lineHeight);
+                    // 将left置为下一子控件的起始点
+                    left += childActualWidth + mLandscapeSpacing;
+
+                    // 最后一行默认不换行，所以要单独处理
+                    if (i == childCount - 1) {
+                        calculatePosition(lastChangeLineIndex, childCount, widthActualSize, lineWidth, lineHeight);
+                    }
                 }
             }
 
@@ -348,7 +351,7 @@ public class FlowHorizontalLayout extends ViewGroup {
                     continue;
                 }
                 List<Integer> integers = position.get(i);
-                if (integers.size() < 4) {
+                if (integers == null || integers.size() < 4) {
                     continue;
                 }
                 child.layout(integers.get(0), integers.get(1), integers.get(2), integers.get(3));
